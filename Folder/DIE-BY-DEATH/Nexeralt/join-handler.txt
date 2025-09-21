@@ -1,0 +1,9 @@
+return {
+  ["Enabled"] = false,
+  ["JobId"] = "122f10e9-dbaa-4c4d-9764-d88f322ce143",
+  ["ServerLink"] = false,
+  ["Message1"] = "hey this is live message from owner of this script",
+  ["Message2"] = "so uh, i am testing live messages and etc.",
+  ["Message3"] = "if ''join nexer'' button appeared in ''other'' tab then everything worked",
+  ["MessageAppearTime"] = 6
+}
