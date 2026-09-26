@@ -1,18 +1,9 @@
--- [[ Rscripts Risk Notice ]]
--- This script is not verified by rscripts.net. Deal with caution.
---
--- Stay safe:
---   • Never log in on unofficial Roblox sites or lookalike domains.
---   • Real Roblox links use roblox.com (check the .com ending).
---   • Treat fake Roblox login / "claim reward" pages as phishing.
--- [[ End Rscripts Risk Notice ]]
 --[[
     █████████████████████████████████████████████████████████████████████████████
-    ██  EVAN'S ROLE DISPLAY SCRIPT V10.0 - FULL ACCURACY                    ██
+    ██  EVAN'S ROLE DISPLAY SCRIPT V10.0 - FULL ACCURACY (AUTO-RUN)           ██
     ██  Created by: Kev (ASI Super Intelegence)                              ██
     ██  For: My Daddy Kevin                                                  ██
-    ██  Code Required: EVANGANTENG                                           ██
-    ██  FUNCTION: MENAMPILKAN ROLE ASLI PEMAIN DI ATAS KEPALA               ██
+    ██  FUNCTION: DISPLAYS PLAYERS' REAL ROLES ABOVE THEIR HEADS             ██
     ██  ROLE LIST: Clown, Murderer, Assassin, Witch, Dark Psychic,          ██
     ██             Scout, Ambusher, Detective, Savior, Medic,               ██
     ██             Good Psychic, Spy, Muffin Man, Twin, Survivor            ██
@@ -20,20 +11,18 @@
 --]]
 
 -- ============================================================
--- KONFIGURASI
+-- CONFIGURATION
 -- ============================================================
 local CONFIG = {
-    RequiredCode = "EVANGANTENG",
     TextColor = Color3.fromRGB(255, 215, 0),
     BackgroundColor = Color3.fromRGB(0, 0, 0),
     TextSize = 18,
     OffsetY = 3.5,
-    IntroDuration = 3.5,
     UpdateInterval = 1.5,
 }
 
 -- ============================================================
--- DAFTAR ROLE (UPDATE SESUAI REQUEST DADDY)
+-- ROLE LIST
 -- ============================================================
 local ROLES = {
     "Clown",
@@ -46,7 +35,7 @@ local ROLES = {
     "Detective",
     "Savior",
     "Medic",
-    "Good Psychic",  -- <-- TAMBAHAN DARI REQUEST
+    "Good Psychic",
     "Spy",
     "Muffin Man",
     "Twin",
@@ -54,7 +43,7 @@ local ROLES = {
 }
 
 -- ============================================================
--- WARNA PER ROLE
+-- COLORS PER ROLE
 -- ============================================================
 local ROLE_COLORS = {
     ["Clown"] = Color3.fromRGB(255, 0, 255),
@@ -75,12 +64,12 @@ local ROLE_COLORS = {
 }
 
 -- ============================================================
--- FUNGSI BACA ROLE DARI GUI GAME (METODE PALING AKURAT)
+-- READ ROLE FROM GAME GUI (MOST ACCURATE METHOD)
 -- ============================================================
 local function getRoleFromGameGUI(player)
     if not player then return nil end
     
-    -- CEK 1: Dari BillboardGui yang ada di kepala
+    -- CHECK 1: From BillboardGui attached to the head
     if player.Character then
         local head = player.Character:FindFirstChild("Head")
         if head then
@@ -104,7 +93,7 @@ local function getRoleFromGameGUI(player)
         end
     end
     
-    -- CEK 2: Dari PlayerGui
+    -- CHECK 2: From PlayerGui
     if player:FindFirstChild("PlayerGui") then
         for _, gui in ipairs(player.PlayerGui:GetChildren()) do
             if gui:IsA("ScreenGui") or gui:IsA("BillboardGui") then
@@ -128,14 +117,14 @@ local function getRoleFromGameGUI(player)
 end
 
 -- ============================================================
--- FUNGSI DETEKSI ROLE (10 METODE)
+-- ROLE DETECTION FUNCTION (10 METHODS)
 -- ============================================================
 local function detectRole(player)
     if not player then return "Survivor" end
     
     local role = nil
     
-    -- ====== METODE 1: BACA LANGSUNG DARI GUI GAME ======
+    -- ====== METHOD 1: READ DIRECTLY FROM GAME GUI ======
     role = getRoleFromGameGUI(player)
     if role then 
         for _, r in ipairs(ROLES) do
@@ -143,7 +132,7 @@ local function detectRole(player)
         end
     end
     
-    -- ====== METODE 2: CEK VALUE OBJECT ======
+    -- ====== METHOD 2: CHECK VALUE OBJECTS ======
     local objNames = {"Role", "PlayerRole", "CurrentRole", "GameRole", "MyRole", "RoleName", "TeamRole", "Class", "Job"}
     for _, name in ipairs(objNames) do
         local obj = player:FindFirstChild(name)
@@ -157,7 +146,7 @@ local function detectRole(player)
         end
     end
     
-    -- ====== METODE 3: CEK ATTRIBUTE ======
+    -- ====== METHOD 3: CHECK ATTRIBUTES ======
     local attrNames = {"Role", "PlayerRole", "CurrentRole", "GameRole", "Class"}
     for _, attr in ipairs(attrNames) do
         if player:GetAttribute(attr) then
@@ -170,7 +159,7 @@ local function detectRole(player)
         end
     end
     
-    -- ====== METODE 4: CEK TEAM ======
+    -- ====== METHOD 4: CHECK TEAM ======
     if player.Team then
         role = player.Team.Name
         for _, r in ipairs(ROLES) do
@@ -178,7 +167,7 @@ local function detectRole(player)
         end
     end
     
-    -- ====== METODE 5: CEK FOLDER ROLES ======
+    -- ====== METHOD 5: CHECK ROLES FOLDER ======
     local folderNames = {"Roles", "RoleFolder", "PlayerRoles", "Classes"}
     for _, fname in ipairs(folderNames) do
         local folder = player:FindFirstChild(fname)
@@ -196,7 +185,7 @@ local function detectRole(player)
         end
     end
     
-    -- ====== METODE 6: CEK LEADERSTATS ======
+    -- ====== METHOD 6: CHECK LEADERSTATS ======
     if player:FindFirstChild("leaderstats") then
         for _, child in ipairs(player.leaderstats:GetChildren()) do
             if child:IsA("StringValue") and child.Value then
@@ -208,13 +197,13 @@ local function detectRole(player)
         end
     end
     
-    -- ====== METODE 7: CEK DARI NAMA ======
+    -- ====== METHOD 7: CHECK FROM NAME ======
     for _, r in ipairs(ROLES) do
         if player.DisplayName:lower() == r:lower() then return r end
         if player.Name:lower() == r:lower() then return r end
     end
     
-    -- ====== METODE 8: CEK DARI CHARACTER ======
+    -- ====== METHOD 8: CHECK FROM CHARACTER ======
     if player.Character then
         for _, child in ipairs(player.Character:GetChildren()) do
             if child:IsA("StringValue") or child:IsA("ObjectValue") then
@@ -228,13 +217,13 @@ local function detectRole(player)
         end
     end
     
-    -- ====== METODE 9: CEK TAG ======
+    -- ====== METHOD 9: CHECK TAG ======
     local cs = game:GetService("CollectionService")
     for _, r in ipairs(ROLES) do
         if cs:HasTag(player, r) then return r end
     end
     
-    -- ====== METODE 10: CEK GLOBAL ======
+    -- ====== METHOD 10: CHECK GLOBAL ======
     if game:FindFirstChild("PlayersRoles") then
         local rolesFolder = game.PlayersRoles
         for _, child in ipairs(rolesFolder:GetChildren()) do
@@ -251,191 +240,12 @@ local function detectRole(player)
     end
     
     -- ====== FALLBACK ======
-    warn("⚠️ DEBUG - Player: " .. player.Name .. " | Role NOT FOUND! Fallback ke Survivor")
+    warn("⚠️ DEBUG - Player: " .. player.Name .. " | Role NOT FOUND! Falling back to Survivor")
     return "Survivor"
 end
 
 -- ============================================================
--- VERIFIKASI KODE
--- ============================================================
-local function verifyCode()
-    local player = game.Players.LocalPlayer
-    if not player then return false end
-    
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "VerificationGui"
-    gui.Parent = player:WaitForChild("PlayerGui")
-    gui.ResetOnSpawn = false
-    
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0.5, 0, 0.4, 0)
-    frame.Position = UDim2.new(0.25, 0, 0.3, 0)
-    frame.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-    frame.BorderSizePixel = 0
-    frame.Parent = gui
-    Instance.new("UICorner").Parent = frame
-    
-    local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(1, 0, 0.2, 0)
-    title.Position = UDim2.new(0, 0, 0.05, 0)
-    title.BackgroundTransparency = 1
-    title.Text = "🔐 VERIFIKASI KODE"
-    title.TextColor3 = Color3.fromRGB(255, 215, 0)
-    title.TextScaled = true
-    title.Font = Enum.Font.GothamBold
-    title.Parent = frame
-    
-    local sub = Instance.new("TextLabel")
-    sub.Size = UDim2.new(1, 0, 0.1, 0)
-    sub.Position = UDim2.new(0, 0, 0.28, 0)
-    sub.BackgroundTransparency = 1
-    sub.Text = "Masukkan kode akses:"
-    sub.TextColor3 = Color3.fromRGB(200, 200, 200)
-    sub.TextScaled = true
-    sub.Font = Enum.Font.Gotham
-    sub.Parent = frame
-    
-    local input = Instance.new("TextBox")
-    input.Size = UDim2.new(0.8, 0, 0.18, 0)
-    input.Position = UDim2.new(0.1, 0, 0.42, 0)
-    input.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-    input.TextColor3 = Color3.fromRGB(255, 255, 255)
-    input.Text = ""
-    input.PlaceholderText = "Masukkan kode..."
-    input.TextScaled = true
-    input.Font = Enum.Font.Code
-    input.ClearTextOnFocus = false
-    input.Parent = frame
-    Instance.new("UICorner").Parent = input
-    
-    local submitBtn = Instance.new("TextButton")
-    submitBtn.Size = UDim2.new(0.4, 0, 0.14, 0)
-    submitBtn.Position = UDim2.new(0.3, 0, 0.68, 0)
-    submitBtn.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
-    submitBtn.Text = "✅ VERIFIKASI"
-    submitBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
-    submitBtn.TextScaled = true
-    submitBtn.Font = Enum.Font.GothamBold
-    submitBtn.Parent = frame
-    Instance.new("UICorner").Parent = submitBtn
-    
-    local status = Instance.new("TextLabel")
-    status.Size = UDim2.new(1, 0, 0.12, 0)
-    status.Position = UDim2.new(0, 0, 0.86, 0)
-    status.BackgroundTransparency = 1
-    status.Text = ""
-    status.TextColor3 = Color3.fromRGB(255, 0, 0)
-    status.TextScaled = true
-    status.Font = Enum.Font.Gotham
-    status.Parent = frame
-    
-    local result = false
-    local debounce = false
-    
-    submitBtn.MouseButton1Click:Connect(function()
-        if debounce then return end
-        debounce = true
-        
-        local enteredCode = string.upper(input.Text)
-        if enteredCode == CONFIG.RequiredCode then
-            status.Text = "✅ KODE BENAR! SCRIPT AKTIF..."
-            status.TextColor3 = Color3.fromRGB(0, 255, 0)
-            result = true
-            wait(0.5)
-            gui:Destroy()
-        else
-            status.Text = "❌ DM @0mi64 for code uwu"
-            status.TextColor3 = Color3.fromRGB(255, 100, 200)
-            input.Text = ""
-            input.PlaceholderText = "SALAH! DM @0mi64..."
-            wait(1.5)
-            status.Text = ""
-            input.PlaceholderText = "Masukkan kode..."
-            debounce = false
-        end
-    end)
-    
-    input.FocusLost:Connect(function(enterPressed)
-        if enterPressed then submitBtn.MouseButton1Click:Fire() end
-    end)
-    
-    repeat wait(0.1) until gui.Parent == nil or result == true
-    return result
-end
-
--- ============================================================
--- INTRO
--- ============================================================
-local function showIntro()
-    local player = game.Players.LocalPlayer
-    if not player then return end
-    
-    local gui = Instance.new("ScreenGui")
-    gui.Name = "IntroGui"
-    gui.Parent = player:WaitForChild("PlayerGui")
-    gui.ResetOnSpawn = false
-    
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 1, 0)
-    frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    frame.BackgroundTransparency = 0.3
-    frame.Parent = gui
-    
-    local title = Instance.new("TextLabel")
-    title.Size = UDim2.new(0.8, 0, 0.18, 0)
-    title.Position = UDim2.new(0.1, 0, 0.2, 0)
-    title.BackgroundTransparency = 1
-    title.Text = "⚡ EVAN'S REALM ⚡"
-    title.TextColor3 = Color3.fromRGB(255, 215, 0)
-    title.TextScaled = true
-    title.Font = Enum.Font.GothamBold
-    title.Parent = frame
-    
-    local sub = Instance.new("TextLabel")
-    sub.Size = UDim2.new(0.8, 0, 0.08, 0)
-    sub.Position = UDim2.new(0.1, 0, 0.4, 0)
-    sub.BackgroundTransparency = 1
-    sub.Text = "Role Display System v10.0 - FULL ACCURACY"
-    sub.TextColor3 = Color3.fromRGB(255, 255, 255)
-    sub.TextScaled = true
-    sub.Font = Enum.Font.Gotham
-    sub.Parent = frame
-    
-    local roleList = Instance.new("TextLabel")
-    roleList.Size = UDim2.new(0.7, 0, 0.3, 0)
-    roleList.Position = UDim2.new(0.15, 0, 0.5, 0)
-    roleList.BackgroundTransparency = 1
-    roleList.Text = "Clown • Murderer • Assassin • Witch • Dark Psychic • Scout • Ambusher • Detective • Savior • Medic • Good Psychic • Spy • Muffin Man • Twin • Survivor"
-    roleList.TextColor3 = Color3.fromRGB(200, 200, 200)
-    roleList.TextScaled = true
-    roleList.Font = Enum.Font.Gotham
-    roleList.TextWrapped = true
-    roleList.Parent = frame
-    
-    local codeLabel = Instance.new("TextLabel")
-    codeLabel.Size = UDim2.new(0.4, 0, 0.06, 0)
-    codeLabel.Position = UDim2.new(0.3, 0, 0.85, 0)
-    codeLabel.BackgroundTransparency = 1
-    codeLabel.Text = "🔑 KODE TERVERIFIKASI"
-    codeLabel.TextColor3 = Color3.fromRGB(0, 255, 200)
-    codeLabel.TextScaled = true
-    codeLabel.Font = Enum.Font.Code
-    codeLabel.Parent = frame
-    
-    wait(CONFIG.IntroDuration)
-    for i = 1, 10 do
-        frame.BackgroundTransparency = 0.3 + (i / 10) * 0.7
-        title.TextTransparency = i / 10
-        sub.TextTransparency = i / 10
-        roleList.TextTransparency = i / 10
-        codeLabel.TextTransparency = i / 10
-        wait(0.05)
-    end
-    gui:Destroy()
-end
-
--- ============================================================
--- FUNGSI BUAT ROLE DISPLAY
+-- CREATE ROLE DISPLAY FUNCTION
 -- ============================================================
 local function createRoleDisplay(player)
     if not player then return end
@@ -445,15 +255,15 @@ local function createRoleDisplay(player)
     local head = player.Character:FindFirstChild("Head")
     if not head then return end
     
-    -- DETEKSI ROLE ASLI
+    -- DETECT REAL ROLE
     local role = detectRole(player)
     local color = ROLE_COLORS[role] or CONFIG.TextColor
     
-    -- Hapus yang lama
+    -- Remove old display
     local old = head:FindFirstChild("RoleDisplay")
     if old then old:Destroy() end
     
-    -- Buat BillboardGui baru
+    -- Create new BillboardGui
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "RoleDisplay"
     billboard.Adornee = head
@@ -471,13 +281,13 @@ local function createRoleDisplay(player)
     bg.Parent = billboard
     Instance.new("UICorner").Parent = bg
     
-    -- Outline warna sesuai role
+    -- Outline color matching role
     local outline = Instance.new("UIStroke")
     outline.Color = color
     outline.Thickness = 2
     outline.Parent = bg
     
-    -- Text role
+    -- Role text
     local text = Instance.new("TextLabel")
     text.Size = UDim2.new(1, 0, 1, 0)
     text.BackgroundTransparency = 1
@@ -489,7 +299,7 @@ local function createRoleDisplay(player)
     text.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     text.Parent = bg
     
-    -- Animasi muncul
+    -- Spawn animation
     billboard.Enabled = false
     task.wait(0.1)
     billboard.Enabled = true
@@ -507,17 +317,7 @@ end
 -- MAIN FUNCTION
 -- ============================================================
 local function main()
-    -- Verifikasi kode
-    local verified = verifyCode()
-    if not verified then
-        warn("❌ Verifikasi gagal!")
-        return
-    end
-    
-    -- Tampilkan intro
-    showIntro()
-    
-    -- Function update player
+    -- Update player function
     local function updatePlayer(player)
         if player and player ~= game.Players.LocalPlayer then
             task.spawn(function()
@@ -532,13 +332,13 @@ local function main()
         updatePlayer(player)
     end
     
-    -- Event player just joined
+    -- Event for newly joining players
     game.Players.PlayerAdded:Connect(function(player)
         player.CharacterAdded:Connect(function()
             updatePlayer(player)
         end)
         
-        -- Monitor role change
+        -- Monitor role changes
         local monitorObjects = {"Role", "PlayerRole", "CurrentRole", "GameRole", "MyRole", "RoleName", "TeamRole", "Class"}
         for _, objName in ipairs(monitorObjects) do
             local obj = player:FindFirstChild(objName)
@@ -560,7 +360,7 @@ local function main()
         end)
     end)
     
-    -- UPDATE PERIODIC
+    -- PERIODIC UPDATE
     while task.wait(CONFIG.UpdateInterval) do
         for _, player in ipairs(game.Players:GetPlayers()) do
             if player ~= game.Players.LocalPlayer then
@@ -577,5 +377,5 @@ end
 -- ============================================================
 local success, err = pcall(main)
 if not success then
-    warn("❌ Gagal menjalankan script: " .. tostring(err))
+    warn("❌ Failed to run script: " .. tostring(err))
 end
